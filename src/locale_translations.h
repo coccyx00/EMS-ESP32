@@ -823,6 +823,10 @@ MAKE_TRANSLATION(doubleMatchFlow, "doublematchflow", "doublematchflow", "Double 
 MAKE_TRANSLATION(solarPump2Mode, "pump2mode", "pump 2 mode", "Pumpe 2 Modus", "Modus pomp 2", "Pump 2 Läge", "tryb pracy pompy 2", "pump 2 modus", "mode pompe 2", "pompa 2 modu", "modalità pompa 2", "režim čerpadla 2")
 MAKE_TRANSLATION(solarPump2Kick, "pump2kick", "pump kick 2", "Pumpe 2 Startboost", "Startboost pomp 2", "Pump 2 Kollektorfunktion", "wspomaganie startu pompy 2", "startboost pumpe 2", "démarrage boost pompe 2", "pompa 2 zorunlu çalıştırma", "avvio forzato pompa 2", "pump kick 2")
 
+// telegram 0x035C
+MAKE_TRANSLATION(solarHeatAssistDiffOn, "solarheatassistdiffon", "solarheatassistdiffon", "Einschaltdiff.Heiz.unterst.", "", "", "", "", "", "", "", "")
+MAKE_TRANSLATION(solarHeatAssistDiffOff, "solarheatassistdiffoff", "solarheatassistdiffoff", "Ausschaltdiff.Heiz.unterst.", "", "", "", "", "", "", "", "")
+
 // telegram 0x035F
 MAKE_TRANSLATION(cylPriority, "cylpriority", "cylinder priority", "Speicher Priorität", "Prioriteit boiler", "Cylinderprioritering", "priorytet cylindra", "berederprioritering", "priorité de cylindre", "silindir önceliği", "priorità vaso accumulo", "Priorita valca")
 

@@ -405,6 +405,23 @@ Solar::Solar(uint8_t device_type, uint8_t device_id, uint8_t product_id, const c
                               DeviceValueNumOp::DV_NUMOP_DIV10,
                               FL_(swapRetTemp),
                               DeviceValueUOM::DEGREES);
+
+        // TMF
+        register_device_value(DeviceValueTAG::TAG_DEVICE_DATA,
+                              &solarHeatAssistDiffOn_,
+                              DeviceValueType::UINT8,
+                              DeviceValueNumOp::DV_NUMOP_DIV10,
+                              FL_(solarHeatAssistDiffOn),
+                              DeviceValueUOM::DEGREES,
+                              MAKE_CF_CB(set_heatAssistDiffOn));
+        
+        register_device_value(DeviceValueTAG::TAG_DEVICE_DATA,
+                              &solarHeatAssistDiffOff_,
+                              DeviceValueType::UINT8,
+                              DeviceValueNumOp::DV_NUMOP_DIV10,
+                              FL_(solarHeatAssistDiffOff),
+                              DeviceValueUOM::DEGREES,
+                              MAKE_CF_CB(set_heatAssistDiffOff));
     }
 }
 
@@ -528,7 +545,8 @@ void Solar::process_SM100Circuit2Config(std::shared_ptr<const Telegram> telegram
 
 // type 0x35C Heat assistance
 void Solar::process_SM100HeatAssist(std::shared_ptr<const Telegram> telegram) {
-    has_update(telegram, solarHeatAssist_, 0); // is *10
+    has_update(telegram, solarHeatAssistDiffOn_, 0); // is *10
+    has_update(telegram, solarHeatAssistDiffOff_, 1); // is *10
 }
 
 // type 0x361 differential control
@@ -1066,12 +1084,21 @@ bool Solar::set_cylPriority(const char * value, const int8_t id) {
     return true;
 }
 
-bool Solar::set_heatAssist(const char * value, const int8_t id) {
+bool Solar::set_heatAssistDiffOn(const char * value, const int8_t id) {
     float temperature;
     if (!Helpers::value2temperature(value, temperature)) {
         return false;
     }
     write_command(0x35C, 0, (uint8_t)(temperature * 10), 0x35C);
+    return true;
+}
+
+bool Solar::set_heatAssistDiffOff(const char * value, const int8_t id) {
+    float temperature;
+    if (!Helpers::value2temperature(value, temperature)) {
+        return false;
+    }
+    write_command(0x35C, 1, (uint8_t)(temperature * 10), 0x35C);
     return true;
 }
 
