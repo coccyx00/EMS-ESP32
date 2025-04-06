@@ -1,5 +1,5 @@
 # strips out lines between two markers
-# pipe a file into, for example: 'cat x | python3 strip_csv.py'
+# pipe a file into it, for example: 'cat x | python3 strip_csv.py'
 import fileinput
 with fileinput.input() as f_input:
     inRecordingMode = False
@@ -10,4 +10,4 @@ with fileinput.input() as f_input:
         elif line.startswith('---- CSV END ----'):
             inRecordingMode = False
         else:
-            print(line, end="") 
+            print(line, end="")

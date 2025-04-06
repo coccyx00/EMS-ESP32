@@ -11,7 +11,7 @@ const pl: BaseTranslation = {
   PASSWORD: 'Hasło',
   SU_PASSWORD: 'Hasło "su"',
   SETTINGS_OF: 'Ustawienia {0}',
-  HELP_OF: 'Pomoc {0}',
+  HELP: 'Pomoc',
   LOGGED_IN: 'Zalogowano użytkownika {name}.',
   PLEASE_SIGNIN: 'Zaloguj się aby kontynuować.',
   UPLOAD_SUCCESSFUL: 'Wysyłanie zakończone.',
@@ -26,6 +26,7 @@ const pl: BaseTranslation = {
   ENTITIES: 'encj{{i|a|e|e|i}}',
   REFRESH: 'Odśwież',
   EXPORT: 'Eksportuj',
+  FAVORITES: "Ulubione",
   DEVICE_DETAILS: 'Szczegóły urządzenia',
   ID_OF: 'ID {0}',
   DEVICE: 'urządzenia',
@@ -71,13 +72,11 @@ const pl: BaseTranslation = {
   TX_ISSUES: 'problem z zapisem na magistralę EMS, spróbuj wybrać inny "Tryb transmisji (Tx)"',
   DISCONNECTED: 'brak połączenia',
   EMS_SCAN: 'Czy na pewno wykonać pełne skanowanie magistrali EMS?',
-  EMS_BUS_STATUS: 'Status magistrali EMS',
-  ACTIVE_DEVICES: 'Aktywne urządzenia i czujniki',
+  DATA_TRAFFIC: 'Data Traffic', // TODO translate
   EMS_DEVICE: 'Urządzenie EMS',
   SUCCESS: 'Udane',
   FAIL: 'Nieudane',
   QUALITY: 'Jakość',
-  SCAN_DEVICES: 'Wyszukiwanie nowych urządzeń',
   SCAN: 'Skanuj',
   STATUS_NAMES: [
     'EMS, telegramy odebrane (Rx)',
@@ -89,9 +88,6 @@ const pl: BaseTranslation = {
     'Wywołania API',
     'Wpisy w SysLog'
   ],
-  NUM_DEVICES: '{num} urządze{{ń|nie|nia|nia|ń}} EMS',
-  NUM_TEMP_SENSORS: '{num} czujni{{ków|k|ki|ki|ków}} temperatury',
-  NUM_ANALOG_SENSORS: '{num} inn{{ych|e|e|e|ych}} urządze{{ń|nie|nia(two)|nia|ń}} podłączon{{ych|e|e|e|ych}} do EMS-ESP',
   NUM_DAYS: '{num} d{{ni|zień|ni|ni|ni}}',
   NUM_SECONDS: '{num} sekun{{d|da|dy|dy|d}}',
   NUM_HOURS: '{num} godzi{{n|na|ny|ny|n}}',
@@ -99,8 +95,6 @@ const pl: BaseTranslation = {
   APPLICATION: 'Aplikacji',
   CUSTOMIZATIONS: 'Personalizacja',
   APPLICATION_RESTARTING: 'Trwa ponowne uruchamianie',
-  INTERFACE_BOARD_PROFILE: 'Profil płytki interfejsu',
-  BOARD_PROFILE_TEXT: 'Wybierz z listy gotowy profil płytki interfejsu lub "własny..." i samodzielnie skonfiguruj posiadany sprzęt.',
   BOARD_PROFILE: 'Profil płytki',
   CUSTOM: 'własny',
   GPIO_OF: 'GPIO {0}',
@@ -108,7 +102,7 @@ const pl: BaseTranslation = {
   TEMPERATURE: '1-Wire®',
   PHY_TYPE: 'Typ układu ethernetowego (PHY)',
   DISABLED: '{{wyłączono|brak|}}',
-  TX_MODE: 'Tryb transmisji (Tx)',
+  TX_MODE: 'EMS Tryb transmisji (Tx)',
   EMS_BUS: '{{magistrali EMS|na magistrali|}}',
   HARDWARE: 'sprzętowy',
   GENERAL_OPTIONS: 'Opcje podstawowe',
@@ -120,7 +114,10 @@ const pl: BaseTranslation = {
   BYPASS_TOKEN: 'Pomiń autoryzację tokenem w wywołaniach API',
   READONLY: 'Tryb pracy "tylko do odczytu" (blokuje wszystkie komendy zapisu na magistralę EMS)',
   UNDERCLOCK_CPU: 'Obniż taktowanie CPU',
+  REMOTE_TIMEOUT: 'Remote timeout',
+  REMOTE_TIMEOUT_EN: 'Disable remote control on missing room temperature', // TODO translate
   HEATINGOFF: 'Uruchom kocioł z wymuszonym wyłączonym grzaniem',
+  MIN_DURATION: 'Wait time',
   ENABLE_SHOWER_TIMER: 'Aktywuj minutnik prysznica',
   ENABLE_SHOWER_ALERT: 'Aktywuj alarm prysznica',
   TRIGGER_TIME: 'Wyzwalaj po czasie',
@@ -130,7 +127,7 @@ const pl: BaseTranslation = {
   BOOLEAN_FORMAT_API: 'Wartości dwustanowe w API/MQTT',
   ENUM_FORMAT: 'Wartości z listy w API/MQTT',
   INDEX: 'indeks',
-  ENABLE_PARASITE: 'Aktywuj zasilanie pasożytnicze',
+  ENABLE_PARASITE: 'Aktywuj zasilanie 1-wire pasożytnicze',
   LOGGING: 'Logowanie',
   LOG_HEX: 'Loguj telegramy EMS w systemie szesnastkowym (hex)',
   ENABLE_SYSLOG: 'Aktywuj SysLog',
@@ -150,7 +147,7 @@ const pl: BaseTranslation = {
   CUSTOMIZATIONS_HELP_2: 'oznacz jako ulubioną',
   CUSTOMIZATIONS_HELP_3: 'zablokuj akcje zapisu',
   CUSTOMIZATIONS_HELP_4: 'wyklucz z MQTT i API',
-  CUSTOMIZATIONS_HELP_5: 'ukryj na pulpicie',
+  CUSTOMIZATIONS_HELP_5: 'ukryć przed urządzeniami',
   CUSTOMIZATIONS_HELP_6: 'usuń z pamięci',
   SELECT_DEVICE: 'wybierz urządzenie',
   SET_ALL: 'Ustaw wszystko jako',
@@ -158,46 +155,39 @@ const pl: BaseTranslation = {
   NAME: '{{Nazwa|nazwa|}}',
   CUSTOMIZATIONS_RESET: 'Na pewno chcesz usunąć wszystkie personalizacje łącznie z ustawieniami dla czujników temperatury 1-Wire® i urządzeń podłączonych do EMS-ESP?',
   SUPPORT_INFORMATION: '{{I|i|}}nformacj{{e|i|}} o systemie',
-  HELP_INFORMATION_1: 'Skorzystaj z wiki w internecie aby uzyskać instrukcje dotyczące konfiguracji EMS-ESP.',
-  HELP_INFORMATION_2: 'Dołącz do naszego serwera Discord by komunikować się na żywo ze społecznością.',
-  HELP_INFORMATION_3: 'Zaproponuj nową funkcjonalność lub zgłoś problem.',
+  HELP_INFORMATION_1: 'Skorzystaj z wiki w internecie aby uzyskać instrukcje dotyczące konfiguracji EMS-ESP',
+  HELP_INFORMATION_2: 'Dołącz do naszego serwera Discord by komunikować się na żywo ze społecznością',
+  HELP_INFORMATION_3: 'Zaproponuj nową funkcjonalność lub zgłoś problem',
   HELP_INFORMATION_4: 'Zgłaszając problem, nie zapomnij pobrać i dołączyć informacji o swoim systemie!',
-  HELP_INFORMATION_5: 'EMS-ESP jest darmowym projektem typu open-source. Aby go wesprzeć, rozważ przyznanie nam gwiazdki na Github!',
   UPLOAD: 'Wysyłanie',
   DOWNLOAD: '{{P|p||P}}obier{{anie|z||z}}',
+  INSTALL: 'Zainstalować',
   ABORTED: 'zostało przerwane!',
   FAILED: 'nie powiodł{{o|a|}} się!',
   SUCCESSFUL: 'powiodło się.',
   SYSTEM: '{{S|s||s}}yste{{m|mu||mowy}}',
   LOG_OF: 'Log {0}',
   STATUS_OF: 'Status {0}',
-  UPLOAD_DOWNLOAD: 'Przesyłanie plików',
-  VERSION_ON: 'Aktualnie używasz',
+  DOWNLOAD_UPLOAD: 'Plików przesyłanie',
   CLOSE: 'Zamknij',
   USE: 'Aby zaktualizować firmware skorzystaj z funkcji',
   FACTORY_RESET: 'Ustawienia fabryczne',
   SYSTEM_FACTORY_TEXT: 'Interfejs EMS-ESP został przywrócony do ustawień fabrycznych i zostanie teraz ponownie uruchomiony.',
-  SYSTEM_FACTORY_TEXT_DIALOG: 'Na pewno chcesz przywrócić ustawienia fabryczne interfejsu EMS-ESP? ',
-  THE_LATEST: 'Najnowsze',
-  OFFICIAL: 'oficjalne',
-  DEVELOPMENT: 'testowe',
-  RELEASE_IS: 'wydanie to',
-  RELEASE_NOTES: 'lista zmian',
-  EMS_ESP_VER: 'Wersja EMS-ESP',
+  SYSTEM_FACTORY_TEXT_DIALOG: 'Na pewno chcesz przywrócić ustawienia fabryczne interfejsu EMS-ESP?',
+  AVAILABLE_VERSION: 'Latest Available Versions', // TODO translate
+  STABLE: 'Stable', // TODO translate
+  DEVELOPMENT: 'Testowe',
   UPTIME: 'Czas działania systemu',
-  HEAP: 'HEAP (wolne / maksymalny przydział)',
+  FREE_MEMORY: 'Wolne Memory',
   PSRAM: 'PSRAM (rozmiar / wolne)',
-  FLASH: 'FLASH (rozmiar / taktowanie)',
+  FLASH: 'FLASH (rozmiar , taktowanie)',
   APPSIZE: 'Aplikacja (partycja: wykorzystane / wolne)',
   FILESYSTEM: 'System plików (wykorzystane / wolne)',
   BUFFER_SIZE: 'Maksymalna pojemność bufora (ilość wpisów)',
   COMPACT: 'Kompaktowy',
-  DOWNLOAD_CUSTOMIZATION_TEXT: 'Pobierz personalizacje.',
-  DOWNLOAD_SCHEDULE_TEXT: 'Pobierz harmonogram zdarzeń.',
-  DOWNLOAD_SETTINGS_TEXT: 'Pobierz ustawienia aplikacji. Uwaga! Plik z ustawieniami zawiera hasła oraz inne wrażliwe informacje systemowe! Nie udostepniaj go pochopnie!',
-  UPLOAD_TEXT: 'Wyślij firmware (.bin), ustawienia lub personalizacje (.json). Opcjonalnie, wyślij wcześniej plik walidacji z sumą kontrolną (.md5).',
-  UPLOADING: 'Wysłano',
-  UPLOAD_DROP_TEXT: 'Przeciągnij tutaj plik lub kliknij',
+  DOWNLOAD_SETTINGS_TEXT: 'Create a backup of your configuration and settings', // TODO translate
+  UPLOAD_TEXT: 'Upload a new firmware file (.bin) or a backup file (.json)', // TODO translate
+  UPLOAD_DROP_TEXT: 'Drop a firmware .bin file or click here', // TODO translate
   ERROR: 'Nieoczekiwany błąd, spróbuj ponownie!',
   TIME_SET: 'Zegar został ustawiony.',
   MANAGE_USERS: 'Zarządzanie użytkownikami',
@@ -295,17 +285,20 @@ const pl: BaseTranslation = {
   STAY: 'Pozostań',
   LEAVE: 'Opuść',
   SCHEDULER: 'Harmonogram',
-  SCHEDULER_HELP_1: 'Zautomatyzuj wykonywanie komend, dodając poniżej harmonogram zdarzeń. Nadaj mu unikalną nazwę, aby móc go aktywować/dezaktywować przez API/MQTT.',
+  SCHEDULER_HELP_1: 'Zautomatyzuj wykonywanie komend, dodając poniżej harmonogram zdarzeń. Nadaj mu unikalną nazwę, aby móc go aktywować/dezaktywować przez API/MQTT',
   SCHEDULER_HELP_2: 'Wpisz 00:00 aby wykonywać jednorazowo przy starcie.',
   SCHEDULE: '{{H|h|}}armonogram{{|u|}}',
   TIME: '{{Czas|Godzina|}}',
   TIMER: '{{m|M|}}inutnik',
+  ONCHANGE: 'O zmianie',
+  CONDITION: 'Stan',
+  IMMEDIATE: 'Natychmiastowy',
   SCHEDULE_UPDATED: 'Harmonogram został uaktualniony.',
   SCHEDULE_TIMER_1: 'przy starcie',
   SCHEDULE_TIMER_2: 'co minutę',
   SCHEDULE_TIMER_3: 'co godzinę',
   CUSTOM_ENTITIES: '{{N|n|}}iestandardowe{{|j|}} encj{{e|i|}}',
-  ENTITIES_HELP_1: 'Zdefiniuj niestandardowe encje dla magistrali EMS.',
+  ENTITIES_HELP_1: 'Zdefiniuj niestandardowe encje dla magistrali EMS',
   ENTITIES_UPDATED: 'Niestandardowe encje zostały uaktualnione.',
   WRITEABLE: 'Zapisywalna',
   SHOWING: 'Wyświetlane',
@@ -324,8 +317,42 @@ const pl: BaseTranslation = {
   SYSTEM_MEMORY: 'Pamięć systemowa',
   APPLICATION_SETTINGS_1: 'Modyfikacja ustawień aplikacji EMS-ESP',
   SECURITY_1: 'Dodawanie i usuwanie użytkowników',
-  UPLOAD_DOWNLOAD_1: 'Wysyłanie/pobieranie ustawień i firmware',
-  MODULES: 'Moduły'
+  DOWNLOAD_UPLOAD_1: 'Pobieranie/wysyłanie ustawień i firmware',
+  MODULES: 'Module', // TODO translate
+  MODULES_1: 'Aktywuj lub dezaktywuj moduły zewnętrzne',
+  MODULES_UPDATED: 'Modules updated', // TODO translate
+  MODULES_DESCRIPTION: 'Click on the Module to activate or de-activate EMS-ESP library modules', // TODO translate
+  MODULES_NONE: 'No external modules detected', // TODO translate
+  RENAME: 'Rename', // TODO translate 
+  ENABLE_MODBUS: 'Aktywuj Modbus',
+  VIEW_LOG: 'View log to diagnose issues', // TODO translate
+  UPLOAD_DRAG: 'drag and drop a file here or click to select one', // TODO translate
+  SERVICES: 'Services', // TODO translate
+  ALLVALUES: 'All Values', // TODO translate
+  SPECIAL_FUNCTIONS: 'Special Functions', // TODO translate
+  WAIT_FIRMWARE: 'Firmware is uploading and installing', // TODO translate
+  INSTALL_VERSION: 'This will install version {0}. Are you sure?', // TODO translate
+  UPGRADE_AVAILABLE: 'There is a firmware upgrade available!', // TODO translate
+  LATEST_VERSION: 'You are using the latest firmware version', // TODO translate
+  PLEASE_WAIT: 'Please wait', // TODO translate
+  RESTARTING_PRE: 'Initializing', // TODO translate
+  RESTARTING_POST: 'Preparing', // TODO translate
+  AUTO_SCROLL: 'Auto Scroll', // TODO translate
+  DASHBOARD: 'Dashboard', // TODO translate
+  DEVELOPER_MODE: 'Developer Mode', // TODO translate
+  BYTES: 'Bytes', // TODO translate
+  BITMASK: 'Bit Mask',// TODO translate
+  DUPLICATE: 'Duplicate', // TODO translate
+  UPGRADE: 'Upgrade', // TODO translate
+  DASHBOARD_1: 'All EMS entities that are active and marked as Favorite, plus all Custom Entities, Schedules and external Sensors data are displayed below.', // TODO translate
+  NO_DATA_1: 'No favorite EMS entities found yet. Use the', // TODO translate
+  NO_DATA_2: 'module to mark them.', // TODO translate
+  NO_DATA_3: 'To see all available entities go to', // TODO translate
+  THIS_VERSION: 'This Version', // TODO translate
+  PLATFORM: 'Platform', // TODO translate
+  RELEASE_TYPE: 'Release Type', // TODO translate
+  REINSTALL: 'Re-install', // TODO translate
+  INTERNET_CONNECTION_REQUIRED: 'Internet connection required for automatic version checking and upgrading', // TODO translate
 };
 
 export default pl;

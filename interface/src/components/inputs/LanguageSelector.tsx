@@ -1,7 +1,8 @@
-import { type ChangeEventHandler, type FC, useContext } from 'react';
+import { type ChangeEventHandler, useContext } from 'react';
 
 import { MenuItem, TextField } from '@mui/material';
 
+import CZflag from 'i18n/CZ.svg';
 import DEflag from 'i18n/DE.svg';
 import FRflag from 'i18n/FR.svg';
 import GBflag from 'i18n/GB.svg';
@@ -16,7 +17,7 @@ import { I18nContext } from 'i18n/i18n-react';
 import type { Locales } from 'i18n/i18n-types';
 import { loadLocaleAsync } from 'i18n/i18n-util.async';
 
-const LanguageSelector: FC = () => {
+const LanguageSelector = () => {
   const { setLocale, locale } = useContext(I18nContext);
 
   const onLocaleSelected: ChangeEventHandler<HTMLInputElement> = async ({
@@ -37,6 +38,10 @@ const LanguageSelector: FC = () => {
       size="small"
       select
     >
+      <MenuItem key="cz" value="cz">
+        <img src={CZflag} style={{ width: 16, verticalAlign: 'middle' }} />
+        &nbsp;CZ
+      </MenuItem>
       <MenuItem key="de" value="de">
         <img src={DEflag} style={{ width: 16, verticalAlign: 'middle' }} />
         &nbsp;DE

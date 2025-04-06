@@ -1,5 +1,4 @@
-import type { FC } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import {
@@ -34,14 +33,14 @@ function RenderIcon({ icon: Icon, bgcolor, label, text }: ListMenuItemProps) {
   );
 }
 
-const LayoutMenuItem: FC<ListMenuItemProps> = ({
+const LayoutMenuItem = ({
   icon,
   bgcolor,
   label,
   text,
   to,
   disabled
-}) => (
+}: ListMenuItemProps) => (
   <>
     {to && !disabled ? (
       <ListItem
@@ -59,18 +58,12 @@ const LayoutMenuItem: FC<ListMenuItemProps> = ({
         }
       >
         <ListItemButton component={Link} to={to}>
-          <RenderIcon
-            icon={icon}
-            bgcolor={bgcolor}
-            label={label}
-            text={text}
-            to=""
-          />
+          <RenderIcon icon={icon} bgcolor={bgcolor} label={label} text={text} />
         </ListItemButton>
       </ListItem>
     ) : (
       <ListItem>
-        <RenderIcon icon={icon} bgcolor={bgcolor} label={label} text={text} to="" />
+        <RenderIcon icon={icon} bgcolor={bgcolor} label={label} text={text} />
       </ListItem>
     )}
   </>

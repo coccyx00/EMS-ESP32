@@ -1,6 +1,6 @@
 /*
  * EMS-ESP - https://github.com/emsesp/EMS-ESP
- * Copyright 2020-2024  Paul Derbyshire
+ * Copyright 2020-2024  emsesp.org - proddy, MichaelDvP
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,6 +31,7 @@
 #include "emsesp.h"
 
 namespace emsesp {
+uint8_t EMSuart::last_tx_src_ = 0;
 
 static QueueHandle_t uart_queue;
 uint8_t              tx_mode_     = 0xFF;
@@ -73,12 +74,13 @@ void EMSuart::uart_event_task(void * pvParameters) {
 void EMSuart::start(const uint8_t tx_mode, const uint8_t rx_gpio, const uint8_t tx_gpio) {
     if (tx_mode_ == 0xFF) {
         uart_config_t uart_config = {
-            .baud_rate  = EMSUART_BAUD,
-            .data_bits  = UART_DATA_8_BITS,
-            .parity     = UART_PARITY_DISABLE,
-            .stop_bits  = UART_STOP_BITS_1,
-            .flow_ctrl  = UART_HW_FLOWCTRL_DISABLE,
-            .source_clk = UART_SCLK_APB,
+            .baud_rate           = EMSUART_BAUD,
+            .data_bits           = UART_DATA_8_BITS,
+            .parity              = UART_PARITY_DISABLE,
+            .stop_bits           = UART_STOP_BITS_1,
+            .flow_ctrl           = UART_HW_FLOWCTRL_DISABLE,
+            .rx_flow_ctrl_thresh = 0, // not used - https://docs.espressif.com/projects/esp-idf/en/v3.3.6/api-reference/peripherals/uart.html
+            .source_clk          = UART_SCLK_APB,
         };
 #if defined(EMSUART_RX_INVERT)
         inverse_mask |= UART_SIGNAL_RXD_INV;
@@ -142,6 +144,8 @@ uint16_t EMSuart::transmit(const uint8_t * buf, const uint8_t len) {
     if (tx_mode_ == 0) {
         return EMS_TX_STATUS_OK;
     }
+
+    last_tx_src_ = len < 4 ? 0 : buf[0];
 
     if (tx_mode_ == EMS_TXMODE_HW) { // hardware controlled mode
         uart_write_bytes_with_break(EMSUART_NUM, buf, len, 10);

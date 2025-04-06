@@ -1,44 +1,38 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-import type { ESPSystemStatus, LogSettings, SystemStatus } from 'types';
+import type { LogSettings, SystemStatus } from 'types';
 
 import { alovaInstance, alovaInstanceGH } from './endpoints';
 
-// ESPSystemStatus - also used to ping in Restart monitor for pinging
-export const readESPSystemStatus = () =>
-  alovaInstance.Get<ESPSystemStatus>('/rest/ESPSystemStatus');
-
-// SystemStatus
+// systemStatus - also used to ping in System Monitor for pinging
 export const readSystemStatus = () =>
   alovaInstance.Get<SystemStatus>('/rest/systemStatus');
-
-// commands
-export const restart = () => alovaInstance.Post('/rest/restart');
-export const partition = () => alovaInstance.Post('/rest/partition');
-export const factoryReset = () => alovaInstance.Post('/rest/factoryReset');
 
 // SystemLog
 export const readLogSettings = () =>
   alovaInstance.Get<LogSettings>(`/rest/logSettings`);
 export const updateLogSettings = (data: LogSettings) =>
   alovaInstance.Post('/rest/logSettings', data);
-export const fetchLog = () => alovaInstance.Post('/rest/fetchLog');
 export const fetchLogES = () => alovaInstance.Get('/es/log');
 
-// Get versions from github
+// Get versions from GitHub
+// cache for 10 minutes to stop getting the IP blocked by GitHub
 export const getStableVersion = () =>
   alovaInstanceGH.Get('latest', {
-    transformData(response) {
-      return response.data.name.substring(1);
+    cacheFor: 60 * 10 * 1000,
+    transform(response: { data: { name: string; published_at: string } }) {
+      return {
+        name: response.data.name.substring(1),
+        published_at: response.data.published_at
+      };
     }
   });
 export const getDevVersion = () =>
   alovaInstanceGH.Get('tags/latest', {
-    transformData(response) {
-      return response.data.name.split(/\s+/).splice(-1)[0].substring(1);
+    cacheFor: 60 * 10 * 1000,
+    transform(response: { data: { name: string; published_at: string } }) {
+      return {
+        name: response.data.name.split(/\s+/).splice(-1)[0].substring(1),
+        published_at: response.data.published_at
+      };
     }
   });
 

@@ -1,5 +1,4 @@
 import { useContext, useState } from 'react';
-import type { FC } from 'react';
 
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import AssessmentIcon from '@mui/icons-material/Assessment';
@@ -12,6 +11,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import SensorsIcon from '@mui/icons-material/Sensors';
 import SettingsIcon from '@mui/icons-material/Settings';
+import StarIcon from '@mui/icons-material/Star';
 import {
   Avatar,
   Box,
@@ -30,7 +30,7 @@ import LayoutMenuItem from 'components/layout/LayoutMenuItem';
 import { AuthenticatedContext } from 'contexts/authentication';
 import { useI18nContext } from 'i18n/i18n-react';
 
-const LayoutMenu: FC = () => {
+const LayoutMenu = () => {
   const { me, signOut } = useContext(AuthenticatedContext);
   const { LL } = useI18nContext();
 
@@ -52,8 +52,8 @@ const LayoutMenu: FC = () => {
   return (
     <>
       <List component="nav">
+        <LayoutMenuItem icon={StarIcon} label="Dashboard" to={`/dashboard`} />
         <LayoutMenuItem icon={CategoryIcon} label={LL.DEVICES()} to={`/devices`} />
-        <LayoutMenuItem icon={SensorsIcon} label={LL.SENSORS()} to={`/sensors`} />
         <Divider />
 
         <Box
@@ -73,25 +73,27 @@ const LayoutMenu: FC = () => {
           >
             <ListItemText
               primary={LL.MODULES()}
-              primaryTypographyProps={{
-                fontWeight: '600',
-                mb: '2px',
-                color: 'lightblue'
-              }}
-              secondary={
-                LL.CUSTOMIZATIONS() +
-                ', ' +
-                LL.SCHEDULER() +
-                ', ' +
-                LL.CUSTOM_ENTITIES(0) +
-                '...'
-              }
-              secondaryTypographyProps={{
-                noWrap: true,
-                fontSize: 12,
-                color: menuOpen ? 'rgba(0,0,0,0)' : 'rgba(255,255,255,0.5)'
-              }}
+              // secondary={
+              //   LL.CUSTOMIZATIONS() +
+              //   ', ' +
+              //   LL.SCHEDULER() +
+              //   ', ' +
+              //   LL.CUSTOM_ENTITIES(0) +
+              //   '...'
+              // }
+              // secondaryTypographyProps={{
+              //   noWrap: true,
+              //   fontSize: 12,
+              //   color: menuOpen ? 'rgba(0,0,0,0)' : 'rgba(255,255,255,0.5)'
+              // }}
               sx={{ my: 0 }}
+              slotProps={{
+                primary: {
+                  fontWeight: '600',
+                  mb: '2px',
+                  color: 'lightblue'
+                }
+              }}
             />
             <KeyboardArrowDown
               sx={{
@@ -104,6 +106,12 @@ const LayoutMenu: FC = () => {
           </ListItemButton>
           {menuOpen && (
             <>
+              <LayoutMenuItem
+                icon={SensorsIcon}
+                label={LL.SENSORS()}
+                to={`/sensors`}
+              />
+
               <LayoutMenuItem
                 icon={ConstructionIcon}
                 label={LL.CUSTOMIZATIONS()}
@@ -126,32 +134,33 @@ const LayoutMenu: FC = () => {
           )}
         </Box>
       </List>
-
       <List style={{ marginTop: `auto` }}>
-        <LayoutMenuItem icon={AssessmentIcon} label={LL.SYSTEM(0)} to="/system" />
+        <LayoutMenuItem
+          icon={AssessmentIcon}
+          label={LL.STATUS_OF('')}
+          to="/status"
+        />
         <LayoutMenuItem
           icon={SettingsIcon}
           label={LL.SETTINGS(0)}
           disabled={!me.admin}
           to="/settings"
         />
-        <LayoutMenuItem icon={LiveHelpIcon} label={LL.HELP_OF('')} to={`/help`} />
+        <LayoutMenuItem icon={LiveHelpIcon} label={LL.HELP()} to={`/help`} />
       </List>
       <Divider />
       <List>
-        <ListItem disablePadding onClick={handleClick}>
-          <ListItemButton>
-            <ListItemIcon>
+        <ListItem disablePadding>
+          <ListItemButton component="button" onClick={handleClick}>
+            <ListItemIcon sx={{ color: '#9e9e9e' }}>
               <AccountCircleIcon />
             </ListItemIcon>
-            <ListItemText>{me.username}</ListItemText>
+            <ListItemText sx={{ color: '#2196f3' }}>{me.username}</ListItemText>
           </ListItemButton>
         </ListItem>
       </List>
-
       <Popover
         id={id}
-        // sx={{ mb: 10 }}
         open={open}
         anchorEl={anchorEl}
         onClose={handleClose}
@@ -183,19 +192,17 @@ const LayoutMenu: FC = () => {
           </Button>
           <List>
             <ListItem disablePadding>
-              <Avatar sx={{ bgcolor: '#b1395f', color: 'white' }}>
+              <Avatar sx={{ bgcolor: '#9e9e9e', color: 'white' }}>
                 <PersonIcon />
               </Avatar>
               <ListItemText
-                sx={{ pl: 2 }}
+                sx={{ pl: 2, color: '#2196f3' }}
                 primary={me.username}
                 secondary={'(' + (me.admin ? LL.ADMINISTRATOR() : LL.GUEST()) + ')'}
               />
             </ListItem>
           </List>
-          {/* <Box p={2}> */}
           <LanguageSelector />
-          {/* </Box> */}
         </Box>
       </Popover>
     </>

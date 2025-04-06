@@ -1,6 +1,6 @@
 /*
  * EMS-ESP - https://github.com/emsesp/EMS-ESP
- * Copyright 2020-2024  Paul Derbyshire
+ * Copyright 2020-2024  emsesp.org - proddy, MichaelDvP
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -81,12 +81,11 @@ class Boiler : public EMSdevice {
     uint8_t  wwTempOK_;             // DHW temperature ok on/off
     uint8_t  wwActive_;             //
     uint8_t  ww3wayValve_;          // 3-way valve on WW
-    uint8_t  wwSetPumpPower_;       // ww pump speed/power?
     uint8_t  wwFlowTempOffset_;     // Boiler offset for ww heating
     uint8_t  wwMaxPower_;           // DHW maximum power
     uint8_t  wwMaxTemp_;            // DHW maximum temperature
     uint32_t wwStarts_;             // DHW starts
-    uint32_t wwStarts2_;            // DHW control starts
+    uint32_t wwStartsHp_;           // DHW starts Heatpump
     uint32_t wwWorkM_;              // DHW minutes
     int8_t   wwHystOn_;
     int8_t   wwHystOff_;
@@ -130,7 +129,9 @@ class Boiler : public EMSdevice {
     uint8_t  pumpModMax_;       // Boiler circuit pump modulation max. power %
     uint8_t  pumpModMin_;       // Boiler circuit pump modulation min. power
     uint8_t  pumpMode_;         // pump setting proportional/deltaP
+    uint8_t  pumpCharacter_;    // pump setting proportional/deltaP
     uint8_t  pumpDelay_;
+    uint8_t  pumpOnTemp_;
     uint8_t  burnMinPeriod_;
     uint8_t  burnMinPower_;
     uint8_t  burnMaxPower_;
@@ -138,9 +139,7 @@ class Boiler : public EMSdevice {
     int8_t   boilHystOff_;
     int8_t   boil2HystOn_;
     int8_t   boil2HystOff_;
-    uint8_t  setFlowTemp_;       // boiler setpoint temp
     uint8_t  curBurnPow_;        // Burner current power %
-    uint8_t  setBurnPow_;        // max output power in %
     uint32_t burnStarts_;        // burner restarts
     uint32_t heatStarts_;        // burner starts for heating
     uint32_t burnWorkMin_;       // Total burner operating time
@@ -195,7 +194,7 @@ class Boiler : public EMSdevice {
     uint16_t maintenanceTime_;
 
     // heatpump
-    uint8_t  hpPower_;
+    uint16_t hpPower_;
     uint8_t  hpCompOn_;
     uint8_t  hpBrinePumpSpd_;
     uint8_t  hpCompSpd_;
@@ -227,11 +226,13 @@ class Boiler : public EMSdevice {
     uint32_t nrgHeat_;
     uint32_t nrgWw2_;
     uint32_t nrgHeat2_;
+    uint32_t nrgCool_;
     uint32_t meterTotal_;
     uint32_t meterComp_;
     uint32_t meterEHeat_;
     uint32_t meterHeat_;
     uint32_t meterWw_;
+    uint32_t meterCool_;
     uint32_t gasMeterHeat_;
     uint32_t gasMeterWw_;
     uint8_t  hpEA0_;
@@ -254,6 +255,8 @@ class Boiler : public EMSdevice {
     uint8_t maxHeatHeat_;
     uint8_t maxHeatDhw_;
     uint8_t hpMaxPower_;
+    uint8_t pvMaxComp_;
+    uint8_t powerReduction_;
 
     uint8_t  pvCooling_;
     uint8_t  manDefrost_;
@@ -263,6 +266,7 @@ class Boiler : public EMSdevice {
     uint8_t  auxHeaterOnly_;
     uint8_t  auxHeaterOff_;
     uint8_t  auxHeaterStatus_;
+    uint8_t  auxHeaterLevel_;
     uint16_t auxHeaterDelay_;
     uint8_t  silentMode_;
     int8_t   minTempSilent_;
@@ -287,16 +291,22 @@ class Boiler : public EMSdevice {
     uint8_t wwEcoStopTemp_;
     uint8_t wwEcoPlusStopTemp_;
 
-    uint8_t vp_cooling_;
-    uint8_t heatCable_;
-    uint8_t VC0valve_;
-    uint8_t primePump_;
-    uint8_t primePumpMod_;
-    uint8_t hp3wayValve_;
-    uint8_t hp4wayValve_;
-    uint8_t elHeatStep1_;
-    uint8_t elHeatStep2_;
-    uint8_t elHeatStep3_;
+    uint8_t  vp_cooling_;
+    uint8_t  heatCable_;
+    uint8_t  VC0valve_;
+    uint8_t  primePump_;
+    uint8_t  primePumpMod_;
+    uint8_t  hp3wayValve_;
+    uint8_t  hp4wayValve_;
+    uint8_t  elHeatStep1_;
+    uint8_t  elHeatStep2_;
+    uint8_t  elHeatStep3_;
+    uint16_t hpPowerLimit_;
+    uint16_t hpCurrPower_;
+    int16_t  pc0Flow_;
+    int16_t  pc1Flow_;
+    uint8_t  pc1Rate_;
+    uint8_t  pc1On_;
 
     // HIU
     // uint16_t cwFlowRate_;  // cold water flow rate *10
@@ -307,8 +317,8 @@ class Boiler : public EMSdevice {
     uint8_t  wwValve_;
 
     // special
-    double  nrgHeatF_; // double calcutate for nrgHeat
-    double  nrgWwF_;   // double calcutate for nrgWw
+    double  nrgHeatF_; // double calculate for nrgHeat
+    double  nrgWwF_;   // double calculate for nrgWw
     uint8_t nomPower_;
 
     /*
@@ -324,7 +334,6 @@ class Boiler : public EMSdevice {
     uint8_t delayBoiler_;     // minutes
     uint8_t tempDiffBoiler_;  // relative temperature degrees
   */
-
     void process_UBAFactory(std::shared_ptr<const Telegram> telegram);
     void process_UBAParameterWW(std::shared_ptr<const Telegram> telegram);
     void process_UBAMonitorFast(std::shared_ptr<const Telegram> telegram);
@@ -364,6 +373,7 @@ class Boiler : public EMSdevice {
     void process_HpAdditionalHeater(std::shared_ptr<const Telegram> telegram);
     void process_HpValve(std::shared_ptr<const Telegram> telegram);
     void process_HpPumps(std::shared_ptr<const Telegram> telegram);
+    void process_HpPump2(std::shared_ptr<const Telegram> telegram);
     void process_HpDhwSettings(std::shared_ptr<const Telegram> telegram);
     void process_HpSettings2(std::shared_ptr<const Telegram> telegram);
     void process_HpSettings3(std::shared_ptr<const Telegram> telegram);
@@ -371,6 +381,8 @@ class Boiler : public EMSdevice {
     void process_HpMeters(std::shared_ptr<const Telegram> telegram);
     void process_WeatherComp(std::shared_ptr<const Telegram> telegram);
     void process_HpFan(std::shared_ptr<const Telegram> telegram);
+    void process_HpPower2(std::shared_ptr<const Telegram> telegram);
+    void process_HpPowerLimit(std::shared_ptr<const Telegram> telegram);
 
     void process_Meters(std::shared_ptr<const Telegram> telegram);
     void process_Energy(std::shared_ptr<const Telegram> telegram);
@@ -409,6 +421,8 @@ class Boiler : public EMSdevice {
     bool        set_min_pump(const char * value, const int8_t id);
     bool        set_max_pump(const char * value, const int8_t id);
     bool        set_pumpMode(const char * value, const int8_t id);
+    bool        set_pumpCharacter(const char * value, const int8_t id);
+    bool        set_pumpOnTemp(const char * value, const int8_t id);
     bool        set_hyst_on(const char * value, const int8_t id);
     bool        set_hyst_off(const char * value, const int8_t id);
     inline bool set_hyst2_on(const char * value, const int8_t id) {
@@ -466,7 +480,10 @@ class Boiler : public EMSdevice {
     bool set_hpCircPumpWw(const char * value, const int8_t id);
     bool set_hpPumpMode(const char * value, const int8_t id);
     bool set_hpMaxPower(const char * value, const int8_t id);
+    bool set_pvMaxComp(const char * value, const int8_t id);
     bool set_hpDiffPress(const char * value, const int8_t id);
+    bool set_hpPowerLimit(const char * value, const int8_t id);
+    bool set_powerReduction(const char * value, const int8_t id);
 
     bool        set_auxLimit(const char * value, const int8_t id);
     inline bool set_auxMaxLimit(const char * value, const int8_t id) {

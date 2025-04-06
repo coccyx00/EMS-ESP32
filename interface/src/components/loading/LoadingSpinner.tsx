@@ -1,17 +1,11 @@
-import type { FC } from 'react';
-
-import { Box, CircularProgress, Typography } from '@mui/material';
+import { Box, CircularProgress } from '@mui/material';
 import type { Theme } from '@mui/material';
-
-import { useI18nContext } from 'i18n/i18n-react';
 
 interface LoadingSpinnerProps {
   height?: number | string;
 }
 
-const LoadingSpinner: FC<LoadingSpinnerProps> = ({ height = '100%' }) => {
-  const { LL } = useI18nContext();
-
+const LoadingSpinner = ({ height = '100%' }: LoadingSpinnerProps) => {
   return (
     <Box
       display="flex"
@@ -28,9 +22,6 @@ const LoadingSpinner: FC<LoadingSpinnerProps> = ({ height = '100%' }) => {
         })}
         size={100}
       />
-      <Typography variant="h4" color="textSecondary">
-        {LL.LOADING()}&hellip;
-      </Typography>
     </Box>
   );
 };

@@ -2,7 +2,7 @@
 .vscode/c_cpp_properties.json
 .vscode/extensions.json
 .vscode/launch.json
-#.vscode/settings.json
+.vscode/settings.json
 
 # c++ compiling
 .clang_complete
@@ -12,17 +12,15 @@ cppcheck.out.xml
 # platformio
 .pio
 pio_local.ini
-*_old
 
 # OS specific
 .DS_Store
 *Thumbs.db
 
-# web specfic
+# web specific
 build/
 dist/
 /data/www
-/lib/framework/WWWData.h
 /interface/build
 node_modules
 /interface/.eslintcache
@@ -30,25 +28,21 @@ stats.html
 *.sln
 *.sw?
 .pnp.*
-*/.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
-yarn.lock
+*/.yarn/cache/*
+*/.yarn/install-state.gz
 analyse.html
 interface/vite.config.ts.timestamp*
 *.local
+src/ESP32React/WWWData.h
+.yarn/*
+.yarnrc.yml
+
 # i18n generated files
 interface/src/i18n/i18n-react.tsx
 interface/src/i18n/i18n-types.ts
 interface/src/i18n/i18n-util.ts
 interface/src/i18n/i18n-util.sync.ts
 interface/src/i18n/i18n-util.async.ts
-# mock-api uploads
-*/uploads/*
-!uploads/README.md
 
 # scripts
 test.sh
@@ -67,3 +61,18 @@ interface/tsconfig.tsbuildinfo
 
 # python virtual environment
 venv/
+
+# cspell
+words-found-verbose.txt
+
+# sonarlint
+compile_commands.json
+
+# pioarduino + hybrid
+managed_components
+dependencies.lock
+CMakeLists.txt
+.dummy/*
+logs/*
+sdkconfig.*
+sdkconfig_tasmota_esp32

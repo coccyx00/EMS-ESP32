@@ -2,8 +2,37 @@
 # GNUMakefile for EMS-ESP
 #
 
-NUMJOBS=${NUMJOBS:-" -j2 "}
-MAKEFLAGS+="j "
+_mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
+I := $(patsubst %/,%,$(dir $(_mkfile_path)))
+
+ifneq ($(words $(MAKECMDGOALS)),1)
+.DEFAULT_GOAL = all
+%:
+	@$(MAKE) $@ --no-print-directory -rRf $(firstword $(MAKEFILE_LIST))
+else
+ifndef ECHO
+T := $(shell $(MAKE) $(MAKECMDGOALS) --no-print-directory \
+      -nrRf $(firstword $(MAKEFILE_LIST)) \
+      ECHO="COUNTTHIS" | grep -c "COUNTTHIS")
+N := x
+C = $(words $N)$(eval N := x $N)
+ECHO = python3 $(I)/scripts/echo_progress.py --stepno=$C --nsteps=$T
+endif
+
+# determine number of parallel compiles based on OS
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Linux)
+    EXTRA_CPPFLAGS = -D LINUX
+	JOBS ?= $(shell nproc)
+endif
+ifeq ($(UNAME_S),Darwin)
+    EXTRA_CPPFLAGS = -D OSX -Wno-tautological-constant-out-of-range-compare
+	JOBS ?= $(shell sysctl -n hw.ncpu)
+endif
+MAKEFLAGS += -j $(JOBS) -l $(JOBS)
+
+# $(info Number of jobs: $(JOBS))
+
 #----------------------------------------------------------------------
 # Project Structure
 #----------------------------------------------------------------------
@@ -13,36 +42,29 @@ MAKEFLAGS+="j "
 # INCLUDES  is a list of directories containing header files
 # LIBRARIES is a list of directories containing libraries, this must be the top level containing include and lib
 #----------------------------------------------------------------------
-
-#TARGET    := $(notdir $(CURDIR))
 TARGET    := emsesp
 BUILD     := build
-SOURCES   := src src/* lib_standalone lib/uuid-common/src lib/uuid-console/src lib/uuid-log/src src/devices lib/ArduinoJson/src lib/PButton lib/semver lib/espMqttClient/src lib/espMqttClient/src/*
-INCLUDES  := src lib_standalone lib/espMqttClient/src lib/espMqttClient/src/Transport lib/ArduinoJson/src lib/uuid-common/src lib/uuid-console/src lib/uuid-log/src lib/uuid-telnet/src lib/uuid-syslog/src lib/semver lib/* src/devices
+SOURCES   := src/core src/devices src/web src/test       lib_standalone lib/semver lib/espMqttClient/src lib/espMqttClient/src/*         lib/ArduinoJson/src lib/uuid-common/src lib/uuid-console/src lib/uuid-log/src   lib/PButton 
+INCLUDES  := src/core src/devices src/web src/test lib/* lib_standalone lib/semver lib/espMqttClient/src lib/espMqttClient/src/Transport lib/ArduinoJson/src lib/uuid-common/src lib/uuid-console/src lib/uuid-log/src   lib/uuid-telnet/src lib/uuid-syslog/src
 LIBRARIES :=
 
 CPPCHECK = cppcheck
-# CHECKFLAGS = -q --force --std=c++17
-CHECKFLAGS = -q --force --std=c++11
+CHECKFLAGS = -q --force --std=gnu++17
 
 #----------------------------------------------------------------------
 # Languages Standard
 #----------------------------------------------------------------------
 C_STANDARD   := -std=c17
-# CXX_STANDARD := -std=c++17
-CXX_STANDARD := -std=gnu++11
-
-# C_STANDARD   := -std=c11
-# CXX_STANDARD := -std=c++11
+CXX_STANDARD := -std=gnu++17
 
 #----------------------------------------------------------------------
 # Defined Symbols
 #----------------------------------------------------------------------
-DEFINES += -DARDUINOJSON_ENABLE_STD_STRING=1 -DARDUINOJSON_ENABLE_PROGMEM=1 -DARDUINOJSON_ENABLE_ARDUINO_STRING -DARDUINOJSON_USE_DOUBLE=0
-DEFINES += -DEMSESP_DEBUG -DEMSESP_STANDALONE -DEMSESP_TEST -D__linux__ -DEMC_RX_BUFFER_SIZE=1500
+DEFINES += -DARDUINOJSON_ENABLE -DARDUINOJSON_ENABLE_ARDUINO_STRING -DARDUINOJSON_USE_DOUBLE=0
+DEFINES += -DEMSESP_STANDALONE -DEMSESP_TEST -DEMSESP_DEBUG -DEMC_RX_BUFFER_SIZE=1500
 DEFINES += $(ARGS)
 
-DEFAULTS = -DEMSESP_DEFAULT_LOCALE=\"en\" -DEMSESP_DEFAULT_TX_MODE=8 -DEMSESP_DEFAULT_VERSION=\"3.7.0-dev\" -DEMSESP_DEFAULT_BOARD_PROFILE=\"S32\"
+DEFAULTS = -DEMSESP_DEFAULT_LOCALE=\"en\" -DEMSESP_DEFAULT_TX_MODE=8 -DEMSESP_DEFAULT_VERSION=\"3.7.3-dev\" -DEMSESP_DEFAULT_BOARD_PROFILE=\"S32S3\"
 
 #----------------------------------------------------------------------
 # Sources & Files
@@ -76,14 +98,19 @@ CXX := /usr/bin/g++
 # LDFLAGS   Linker Flags
 #----------------------------------------------------------------------
 CPPFLAGS  += $(DEFINES) $(DEFAULTS) $(INCLUDE)
-CPPFLAGS  += -ggdb
-CPPFLAGS  += -g3
-CPPFLAGS  += -Os
+CPPFLAGS  += -ggdb -g3 -O3
+CPPFLAGS  += -MMD
+CPPFLAGS  += -flto=auto -fno-lto
+CPPFLAGS  += -Wall -Wextra -Werror
+CPPFLAGS  += -Wswitch-enum
+CPPFLAGS  += -Wno-unused-parameter
+CPPFLAGS  += -Wno-missing-braces
+
+CPPFLAGS  += $(EXTRA_CPPFLAGS)
 
 CFLAGS    += $(CPPFLAGS)
-CFLAGS    += -Wall -Wextra -Werror -Wswitch-enum -Wno-unused-parameter -Wno-inconsistent-missing-override -Wno-missing-braces -Wno-unused-lambda-capture -Wno-sign-compare
-
-CXXFLAGS  += $(CFLAGS) -MMD
+CXXFLAGS  += $(CPPFLAGS)
+LDFLAGS =
 
 #----------------------------------------------------------------------
 # Compiler & Linker Commands
@@ -124,23 +151,27 @@ COMPILE.cpp = $(CXX) $(CXX_STANDARD) $(CXXFLAGS) $(DEPFLAGS) -c $< -o $@
 .SILENT: $(OUTPUT)
 
 all: $(OUTPUT)
+	@$(ECHO) Build complete.
 
 $(OUTPUT): $(OBJS)
 	@mkdir -p $(@D)
+	@$(ECHO) Linking $@
 	$(LINK.o)
 	$(SYMBOLS.out)
-
+	
 $(BUILD)/%.o: %.c
 	@mkdir -p $(@D)
-	$(COMPILE.c)
+	@$(ECHO) Compiling $@
+	@$(COMPILE.c)
 
 $(BUILD)/%.o: %.cpp
 	@mkdir -p $(@D)
-	$(COMPILE.cpp)
+	@$(ECHO) Compiling $@
+	@$(COMPILE.cpp)
 
 $(BUILD)/%.o: %.s
 	@mkdir -p $(@D)
-	$(COMPILE.s)
+	@$(COMPILE.s)
 
 cppcheck: $(SOURCES)
 	$(CPPCHECK) $(CHECKFLAGS) $^
@@ -149,6 +180,7 @@ run: $(OUTPUT)
 	@$<
 
 .PHONY: clean
+
 clean:
 	@$(RM) -rf $(BUILD) $(OUTPUT)
 
@@ -157,3 +189,5 @@ help:
 	@echo $(OUTPUT)
 
 -include $(DEPS)
+
+endif

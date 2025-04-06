@@ -4,11 +4,13 @@ import { defineConfig } from 'vite';
 import viteImagemin from 'vite-plugin-imagemin';
 import viteTsconfigPaths from 'vite-tsconfig-paths';
 
+import mockServer from '../mock-api/mockServer.js';
+
 export default defineConfig(({ command, mode }) => {
   if (command === 'serve') {
     console.log('Preparing for standalone build with server, mode=' + mode);
     return {
-      plugins: [preact(), viteTsconfigPaths()],
+      plugins: [preact(), viteTsconfigPaths(), mockServer()],
       server: {
         open: true,
         port: mode == 'production' ? 4173 : 3000,
@@ -18,13 +20,8 @@ export default defineConfig(({ command, mode }) => {
             changeOrigin: true,
             secure: false
           },
-          '/es': {
-            target: 'http://localhost:3081',
-            changeOrigin: true,
-            secure: false
-          },
-          '/rest/uploadFile': 'http://localhost:3082', // this must come first to work!
-          '/rest': 'http://localhost:3080'
+          '/rest': 'http://localhost:3080',
+          '/gh': 'http://localhost:3080' // mock for GitHub API
         }
       }
     };
@@ -121,11 +118,7 @@ export default defineConfig(({ command, mode }) => {
           manualChunks(id: string) {
             if (id.includes('node_modules')) {
               // creating a chunk to react routes deps. Reducing the vendor chunk size
-              if (
-                id.includes('react-router-dom') ||
-                id.includes('@remix-run') ||
-                id.includes('react-router')
-              ) {
+              if (id.includes('react-router')) {
                 return '@react-router';
               }
               return 'vendor';

@@ -11,7 +11,7 @@ const tr: Translation = {
   PASSWORD: 'Şifre',
   SU_PASSWORD: 'SK Şifresi',
   SETTINGS_OF: '{0} Ayarlar',
-  HELP_OF: '{0} Yardım',
+  HELP: 'Yardım',
   LOGGED_IN: '{name} olarak giriş yapıldı',
   PLEASE_SIGNIN: 'Lütfen devam etmek için giriş yapın',
   UPLOAD_SUCCESSFUL: 'Yükleme tamamlandı',
@@ -23,9 +23,10 @@ const tr: Translation = {
   ONOFF: 'açık/kapalı',
   TYPE: 'Tür',
   DESCRIPTION: 'Açıklama',
-  ENTITIES: 'Varlıklar',
+  ENTITIES: 'varlıklar',
   REFRESH: 'Yenile',
   EXPORT: 'Dışarı al',
+  FAVORITES: "Favoriler",
   DEVICE_DETAILS: 'Cihaz Ayrıntıları',
   ID_OF: 'Kimlik {0}',
   DEVICE: 'Cihaz',
@@ -71,13 +72,11 @@ const tr: Translation = {
   TX_ISSUES: 'Tx sorunu - başka bir Tx Modu deneyin',
   DISCONNECTED: 'Bağlantı kesildi',
   EMS_SCAN: 'EMS Hattında tam bir cihaz taraması başlatmak istediğinizden emin misiniz?',
-  EMS_BUS_STATUS: 'EMS Hattı Durumu',
-  ACTIVE_DEVICES: 'Aktif Cihazlar ve Sensörler',
+  DATA_TRAFFIC: 'Data Traffic', // TODO translate
   EMS_DEVICE: 'EMS Cihazı',
   SUCCESS: 'BAŞARILI',
   FAIL: 'HATA',
   QUALITY: 'KALİTE',
-  SCAN_DEVICES: 'Yeni cihaz taraması',
   SCAN: 'Tara',
   STATUS_NAMES: [
     'EMS Telegramlar Alındı (Rx)',
@@ -89,9 +88,6 @@ const tr: Translation = {
     'API Aramaları',
     'Sistem Kayıt Mesajları'
   ],
-  NUM_DEVICES: '{num} Cihaz{{ları}}',
-  NUM_TEMP_SENSORS: '{num} Sıcaklık Sensör{{leri}}',
-  NUM_ANALOG_SENSORS: '{num} Analog Sensör{{ler}}',
   NUM_DAYS: '{num} gün{{ler}}',
   NUM_SECONDS: '{num} saniye{{ler}}',
   NUM_HOURS: '{num} saat{{ler}}',
@@ -99,8 +95,6 @@ const tr: Translation = {
   APPLICATION: 'Uygulama',
   CUSTOMIZATIONS: 'Özelleştirme',
   APPLICATION_RESTARTING: 'EMS-ESP yeniden başlatılıyor',
-  INTERFACE_BOARD_PROFILE: 'Arabirim Kart Profili',
-  BOARD_PROFILE_TEXT: 'Aşağıdan hazır kart profillerinden birini seçin yada kendi donanımınızı ayarlamak için Özeli tercih edin',
   BOARD_PROFILE: 'Kart Profili',
   CUSTOM: 'Özel',
   GPIO_OF: '{0} GPIO',
@@ -108,7 +102,7 @@ const tr: Translation = {
   TEMPERATURE: 'Sıcaklık',
   PHY_TYPE: 'Eth PHY Tipi',
   DISABLED: 'devre dışı',
-  TX_MODE: 'Tx Modu',
+  TX_MODE: 'EMS Tx Modu',
   HARDWARE: 'Donanım',
   EMS_BUS: '{{HAT|EMS HATTI}}',
   GENERAL_OPTIONS: 'Genel Seçenekler',
@@ -120,7 +114,10 @@ const tr: Translation = {
   BYPASS_TOKEN: 'API bağlantılarında Erişim Jeton onaylamasını geç',
   READONLY: 'Salt okunur modu devreye al (bütün giden EMS Tx Yazma komutlarını engeller)',
   UNDERCLOCK_CPU: 'İşlemci hızını düşür',
+  REMOTE_TIMEOUT: 'Remote timeout',
+  REMOTE_TIMEOUT_EN: 'Disable remote on missing room temperature', // TODO translate
   HEATINGOFF: 'Start boiler with forced heating off', // TODO translate
+  MIN_DURATION: 'Wait time',
   ENABLE_SHOWER_TIMER: 'Duş Sayacını Devreye Al',
   ENABLE_SHOWER_ALERT: 'Duş Alarmını Devreye Al',
   TRIGGER_TIME: 'Tetikleme Zamanı',
@@ -130,7 +127,7 @@ const tr: Translation = {
   BOOLEAN_FORMAT_API: 'Boolean Biçimleme API/MQTT',
   ENUM_FORMAT: 'Enum Biçimleme API/MQTT',
   INDEX: 'İndeks',
-  ENABLE_PARASITE: 'Parazit gücü devreye al',
+  ENABLE_PARASITE: '1-wire parazit gücü devreye al',
   LOGGING: 'Kayıt ediliyor',
   LOG_HEX: 'EMS telegramlarını hexadecimal olarak kayıt et',
   ENABLE_SYSLOG: 'Sistem Kaydını Devreye Al',
@@ -150,7 +147,7 @@ const tr: Translation = {
   CUSTOMIZATIONS_HELP_2: 'favori olarak işaretle',
   CUSTOMIZATIONS_HELP_3: 'yazma işlemini devre dışı bırak',
   CUSTOMIZATIONS_HELP_4: 'MQTT ve APInin dışında bırak',
-  CUSTOMIZATIONS_HELP_5: 'Gösterde panelinden gizle',
+  CUSTOMIZATIONS_HELP_5: 'Cihazlardan gizle',
   CUSTOMIZATIONS_HELP_6: 'remove from memory',
   SELECT_DEVICE: 'Bir cihaz seç',
   SET_ALL: 'hepsini ayarla',
@@ -162,42 +159,35 @@ const tr: Translation = {
   HELP_INFORMATION_2: 'Canlı topluluk sohbeti için Discord sunucumuza katılın',
   HELP_INFORMATION_3: 'Yeni bir özellik talep etmek yada hata bildirmek için',
   HELP_INFORMATION_4: 'Bir sorun bildirirken daha hızlı bir dönüş için sistem bilginizi indirip eklemeyi unutmayın',
-  HELP_INFORMATION_5: 'EMS-ESP ücretsiz ve açık kaynaklı bir projedir. Lütfen geliştirmeyi desteklemek için Githubda projeye yıldız verin!',
   UPLOAD: 'Yükleme',
   DOWNLOAD: '{{İ|i|i}}İndirme',
+  INSTALL: 'Düzenlemek',
   ABORTED: 'iptal edildi',
   FAILED: 'başarısız',
   SUCCESSFUL: 'başarılı',
   SYSTEM: 'Sistem',
   LOG_OF: '{0} Kaydı',
   STATUS_OF: '{0} Durumu',
-  UPLOAD_DOWNLOAD: 'Yükleme/İndirme',
-  VERSION_ON: 'You are currently on', // TODO translate
+  DOWNLOAD_UPLOAD: 'İndirme/Yükleme',
   CLOSE: 'Kapat',
   USE: 'KUllan',
   FACTORY_RESET: 'Fabrika ayarına dönme',
   SYSTEM_FACTORY_TEXT: 'Cihaz fabrika ayarlarına döndü ve şimdi yendiden başlatılacak',
   SYSTEM_FACTORY_TEXT_DIALOG: 'Cihazı fabrika ayarlarına döndürmek istediğinize emin misiniz?',
-  THE_LATEST: 'En son',
-  OFFICIAL: 'resmi',
-  DEVELOPMENT: 'geliştirme',
-  RELEASE_IS: 'release is', // TODO translate
-  RELEASE_NOTES: 'yayınlanma notları',
-  EMS_ESP_VER: 'EMS-ESP Sürümü',
+  AVAILABLE_VERSION: 'Latest Available Versions', // TODO translate
+  STABLE: 'Stable', // TODO translate
+  DEVELOPMENT: 'Geliştirme',
   UPTIME: 'Sistem Çalışma Süresi',
-  HEAP: 'Yığın (Boş / Maksimum Tahsis)',
+  FREE_MEMORY: 'Yığın Memory',
   PSRAM: 'PSRAM (Boyut / Boş)',
-  FLASH: 'Flash Çipi (Boyut / Hız)',
+  FLASH: 'Flash Çipi (Boyut , Hız)',
   APPSIZE: 'Uygulama (Bölme: Kullanılmış / Boş)',
   FILESYSTEM: 'Dosya Sistemi (Kullanılmış / Boş)',
   BUFFER_SIZE: 'En fazla bellek boyutu',
   COMPACT: 'Sıkışık',
-  DOWNLOAD_CUSTOMIZATION_TEXT: 'Varlık özelleştirmelerini indir',
-  DOWNLOAD_SCHEDULE_TEXT: 'Download Scheduler Events', // TODO translate
-  DOWNLOAD_SETTINGS_TEXT: 'Uygulama ayarlarını indir. Bu dosya hassas sistem bilgileri ve şifrelerinizi içerdiğinden ayarlarınızı paylaşırken dikkatli olun',
-  UPLOAD_TEXT: 'Yeni bir bellenim(.bin) dosyası yükleyin, ayarlar ve özelleştirmeler(.json) dosyası aşağıda, sçenekli denetim yüklemesi(.md5) için önce',
-  UPLOADING: 'Yüklüyor',
-  UPLOAD_DROP_TEXT: 'Buraya tıklayın yada dosyayı sürükleyip bırakın',
+  DOWNLOAD_SETTINGS_TEXT: 'Create a backup of your configuration and settings', // TODO translate
+  UPLOAD_TEXT: 'Upload a new firmware file (.bin) or a backup file (.json)', // TODO translate
+  UPLOAD_DROP_TEXT: 'Drop a firmware .bin file or click here', // TODO translate
   ERROR: 'Beklenemedik hata, lütfen tekrar deneyin.',
   TIME_SET: 'Zaman ayarı',
   MANAGE_USERS: 'Kullanıcıları yönet',
@@ -269,7 +259,7 @@ const tr: Translation = {
   SCAN_AGAIN: 'Tekrar tara',
   NETWORK_SCANNER: 'Ağ Tarayıcısı',
   NETWORK_NO_WIFI: 'Hiçbir Kablosuz Ağ bulunamadı',
-  NETWORK_BLANK_SSID: 'Kablosuz ağı devre dışı bırakmak için boş bırakın', // TODO translate
+  NETWORK_BLANK_SSID: 'Kablosuz ağı devre dışı bırakmak için boş bırakın',
   NETWORK_BLANK_BSSID: 'leave blank to use only SSID', // TODO translate
   TX_POWER: 'Aktarım gücü',
   HOSTNAME: 'Ana Makine Adı',
@@ -295,11 +285,14 @@ const tr: Translation = {
   STAY: 'Stay', // TODO translate
   LEAVE: 'Leave', // TODO translate
   SCHEDULER: 'Scheduler', // TODO translate
-  SCHEDULER_HELP_1: 'Automate commands by adding scheduled events below. Set a unique Name to enable/disable activation via API/MQTT.', // TODO translate
+  SCHEDULER_HELP_1: 'Automate commands by adding scheduled events below. Set a unique Name to enable/disable activation via API/MQTT', // TODO translate
   SCHEDULER_HELP_2: 'Use 00:00 to trigger once on start-up', // TODO translate
   SCHEDULE: 'Schedule', // TODO translate
   TIME: 'Time', // TODO translate
   TIMER: 'Timer', // TODO translate
+  ONCHANGE: 'Değişimde',
+  CONDITION: 'Durum', // TODO translate
+  IMMEDIATE: 'hemen', // TODO translate
   SCHEDULE_UPDATED: 'Schedule updated', // TODO translate
   SCHEDULE_TIMER_1: 'on startup', // TODO translate
   SCHEDULE_TIMER_2: 'every minute', // TODO translate
@@ -324,8 +317,42 @@ const tr: Translation = {
   SYSTEM_MEMORY: 'System Memory', // TODO translate
   APPLICATION_SETTINGS_1: 'Modify EMS-ESP Application Settings', // TODO translate
   SECURITY_1: 'Add or remove users', // TODO translate
-  UPLOAD_DOWNLOAD_1: 'Upload/Download Settings and Firmware', // TODO translate
-  MODULES: 'Modules' // TODO translate
+  DOWNLOAD_UPLOAD_1: 'Download and Upload Settings and Firmware', // TODO translate
+  MODULES: 'Module', // TODO translate
+  MODULES_1: 'Harici modülleri etkinleştirin veya devre dışı bırakın',
+  MODULES_UPDATED: 'Modules updated', // TODO translate
+  MODULES_DESCRIPTION: 'Click on the Module to activate or de-activate EMS-ESP library modules', // TODO translate
+  MODULES_NONE: 'No external modules detected', // TODO translate
+  RENAME: 'Rename', // TODO translate 
+  ENABLE_MODBUS: 'Enable Modbus', // TODO translate
+  VIEW_LOG: 'View log to diagnose issues', // TODO translate
+  UPLOAD_DRAG: 'drag and drop a file here or click to select one', // TODO translate
+  SERVICES: 'Services', // TODO translate
+  ALLVALUES: 'All Values', // TODO translate
+  SPECIAL_FUNCTIONS: 'Special Functions', // TODO translate
+  WAIT_FIRMWARE: 'Firmware is uploading and installing', // TODO translate
+  INSTALL_VERSION: 'This will install version {0}. Are you sure?', // TODO translate
+  UPGRADE_AVAILABLE: 'There is a firmware upgrade available!', // TODO translate
+  LATEST_VERSION: 'You are using the latest firmware version.', // TODO translate
+  PLEASE_WAIT: 'Please wait', // TODO translate
+  RESTARTING_PRE: 'Initializing', // TODO translate
+  RESTARTING_POST: 'Preparing', // TODO translate
+  AUTO_SCROLL: 'Auto Scroll', // TODO translate
+  DASHBOARD: 'Dashboard', // TODO translate
+  DEVELOPER_MODE: 'Developer Mode', // TODO translate
+  BYTES: 'Bytes', // TODO translate
+  BITMASK: 'Bit Mask',// TODO translate
+  DUPLICATE: 'Duplicate', // TODO translate
+  UPGRADE: 'Upgrade', // TODO translate
+  DASHBOARD_1: 'All EMS entities that are active and marked as Favorite, plus all Custom Entities, Schedules and external Sensors data are displayed below.', // TODO translate
+  NO_DATA_1: 'No favorite EMS entities found yet. Use the', // TODO translate
+  NO_DATA_2: 'module to mark them.', // TODO translate
+  NO_DATA_3: 'To see all available entities go to', // TODO translate
+  THIS_VERSION: 'This Version', // TODO translate
+  PLATFORM: 'Platform', // TODO translate
+  RELEASE_TYPE: 'Release Type', // TODO translate
+  REINSTALL: 'Re-install', // TODO translate
+  INTERNET_CONNECTION_REQUIRED: 'Internet connection required for automatic version checking and upgrading', // TODO translate
 };
 
 export default tr;

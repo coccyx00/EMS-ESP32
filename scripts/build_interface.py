@@ -3,6 +3,7 @@ import os
 
 Import("env")
 
+
 def buildWeb():
     os.chdir("interface")
     print("Building web interface...")
@@ -20,5 +21,9 @@ def buildWeb():
         os.chdir("..")
 
 
-if not (env.IsCleanTarget()):
-    buildWeb()
+# Don't buuld webUI if called from GitHub Actions
+if "NO_BUILD_WEBUI" in os.environ:
+    print("!! Skipping the build of the web interface !!")
+else:
+    if not (env.IsCleanTarget()):
+        buildWeb()

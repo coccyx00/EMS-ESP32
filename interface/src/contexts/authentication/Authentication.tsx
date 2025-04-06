@@ -1,13 +1,14 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { FC } from 'react';
-import { redirect } from 'react-router-dom';
+import { redirect } from 'react-router';
 import { toast } from 'react-toastify';
 
-import * as AuthenticationApi from 'api/authentication';
 import { ACCESS_TOKEN } from 'api/endpoints';
 
-import { useRequest } from 'alova';
+import * as AuthenticationApi from 'components/routing/authentication';
+import { useRequest } from 'alova/client';
 import { LoadingSpinner } from 'components';
+import { verifyAuthorization } from 'components/routing/authentication';
 import { useI18nContext } from 'i18n/i18n-react';
 import type { Me } from 'types';
 import type { RequiredChildrenProps } from 'utils';
@@ -20,12 +21,9 @@ const Authentication: FC<RequiredChildrenProps> = ({ children }) => {
   const [initialized, setInitialized] = useState<boolean>(false);
   const [me, setMe] = useState<Me>();
 
-  const { send: verifyAuthorization } = useRequest(
-    AuthenticationApi.verifyAuthorization(),
-    {
-      immediate: false
-    }
-  );
+  const { send: sendVerifyAuthorization } = useRequest(verifyAuthorization(), {
+    immediate: false
+  });
 
   const signIn = (accessToken: string) => {
     try {
@@ -33,7 +31,7 @@ const Authentication: FC<RequiredChildrenProps> = ({ children }) => {
       const decodedMe = AuthenticationApi.decodeMeJWT(accessToken);
       setMe(decodedMe);
       toast.success(LL.LOGGED_IN({ name: decodedMe.username }));
-    } catch (error) {
+    } catch {
       setMe(undefined);
       throw new Error('Failed to parse JWT');
     }
@@ -43,7 +41,6 @@ const Authentication: FC<RequiredChildrenProps> = ({ children }) => {
     AuthenticationApi.clearAccessToken();
     setMe(undefined);
     if (doRedirect) {
-      // navigate('/');
       redirect('/');
     }
   };
@@ -51,7 +48,7 @@ const Authentication: FC<RequiredChildrenProps> = ({ children }) => {
   const refresh = useCallback(async () => {
     const accessToken = AuthenticationApi.getStorage().getItem(ACCESS_TOKEN);
     if (accessToken) {
-      await verifyAuthorization()
+      await sendVerifyAuthorization()
         .then(() => {
           setMe(AuthenticationApi.decodeMeJWT(accessToken));
           setInitialized(true);
@@ -70,16 +67,15 @@ const Authentication: FC<RequiredChildrenProps> = ({ children }) => {
     void refresh();
   }, [refresh]);
 
+  // cache object to prevent re-renders
+  const obj = useMemo(
+    () => ({ signIn, signOut, me, refresh }),
+    [signIn, signOut, me, refresh]
+  );
+
   if (initialized) {
     return (
-      <AuthenticationContext.Provider
-        value={{
-          signIn,
-          signOut,
-          me,
-          refresh
-        }}
-      >
+      <AuthenticationContext.Provider value={obj}>
         {children}
       </AuthenticationContext.Provider>
     );

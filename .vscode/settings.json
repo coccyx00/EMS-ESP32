@@ -89,8 +89,13 @@
       "**/ArduinoJson/**"
     ],
     "cSpell.enableFiletypes": [
-      "!cpp",
-      "!typescript"
+      "ini",
+      "makefile"
     ],
-    "typescript.preferences.preferTypeOnlyAutoImports": true
+    "typescript.preferences.preferTypeOnlyAutoImports": true,
+    "sonarlint.pathToCompileCommands": "${workspaceFolder}/compile_commands.json",
+    "sonarlint.connectedMode.project": {
+      "connectionId": "emsesp",
+      "projectKey": "emsesp_EMS-ESP32"
+    }
   }

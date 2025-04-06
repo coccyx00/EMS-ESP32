@@ -1,6 +1,6 @@
 /*
  * EMS-ESP - https://github.com/emsesp/EMS-ESP
- * Copyright 2020-2024  Paul Derbyshire
+ * Copyright 2020-2024  emsesp.org - proddy, MichaelDvP
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,9 +21,9 @@
 namespace emsesp {
 
 WebActivityService::WebActivityService(AsyncWebServer * server, SecurityManager * securityManager) {
-    server->on(EMSESP_ACTIVITY_SERVICE_PATH,
-               HTTP_GET,
-               securityManager->wrapRequest([this](AsyncWebServerRequest * request) { webActivityService(request); }, AuthenticationPredicates::IS_AUTHENTICATED));
+    securityManager->addEndpoint(server, EMSESP_ACTIVITY_SERVICE_PATH, AuthenticationPredicates::IS_AUTHENTICATED, [this](AsyncWebServerRequest * request) {
+        webActivityService(request);
+    });
 }
 
 void WebActivityService::webActivityService(AsyncWebServerRequest * request) {

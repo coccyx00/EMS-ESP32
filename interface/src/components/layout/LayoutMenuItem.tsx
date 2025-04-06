@@ -1,5 +1,4 @@
-import type { FC } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router';
 
 import { ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import type { SvgIconProps } from '@mui/material';
@@ -13,12 +12,12 @@ interface LayoutMenuItemProps {
   disabled?: boolean;
 }
 
-const LayoutMenuItem: FC<LayoutMenuItemProps> = ({
+const LayoutMenuItem = ({
   icon: Icon,
   label,
   to,
   disabled
-}) => {
+}: LayoutMenuItemProps) => {
   const { pathname } = useLocation();
 
   const selected = routeMatches(to, pathname);
